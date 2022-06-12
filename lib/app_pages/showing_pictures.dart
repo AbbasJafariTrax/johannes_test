@@ -129,16 +129,19 @@ class _ShowingPicturesState extends State<ShowingPictures> {
                 borderRadius: 20,
                 clickListener: () async {
                   if (_formKey.currentState!.validate()) {
+                    // Get images from state management
                     List<XFile> imgList =
                         Provider.of<MyAppState>(context, listen: false)
                             .imageArrays;
 
+                    // Get the first image to create mergedImage width and height
                     final image1 = packageImage
                         .decodeImage(File(imgList[0].path).readAsBytesSync());
 
                     var mergedImage;
 
                     if (image1 != null) {
+                      // Create merged image
                       mergedImage = packageImage.Image(
                         image1.width + image1.width + image1.width,
                         image1.height + image1.height + image1.height,
@@ -149,9 +152,11 @@ class _ShowingPicturesState extends State<ShowingPictures> {
                     for (int mIndex = 0; mIndex < imgList.length; mIndex++) {
                       if (mIndex == 0) continue;
 
+                      // Get current image
                       final tempImg = packageImage.decodeImage(
                           File(imgList[mIndex].path).readAsBytesSync());
 
+                      // Merge image inside a square 3 x 3
                       if (tempImg != null) {
                         if (mIndex == 1 || mIndex == 4 || mIndex == 7) {
                           packageImage.copyInto(
@@ -190,12 +195,14 @@ class _ShowingPicturesState extends State<ShowingPictures> {
                       }
                     }
 
+                    // Create single image
                     final documentDirectory =
-                        await getApplicationDocumentsDirectory();
+                        await getTemporaryDirectory();
                     final file =
                         File(join(documentDirectory.path, "merged_image.jpg"));
                     file.writeAsBytesSync(packageImage.encodeJpg(mergedImage));
 
+                    // Create email body
                     final Email email = Email(
                       body: 'Email body',
                       subject: 'Email subject',
@@ -204,6 +211,7 @@ class _ShowingPicturesState extends State<ShowingPictures> {
                       isHTML: false,
                     );
 
+                    // Send the email
                     await FlutterEmailSender.send(email).whenComplete(() {
                       showSnackBar(
                         context: context,

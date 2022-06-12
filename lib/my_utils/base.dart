@@ -11,9 +11,9 @@ void showSnackBar({
   final snackBar = SnackBar(
     content: Text(
       msg,
-      style: const TextStyle(color: Colors.black),
+      style: TextStyle(color: txtColor),
     ),
-    backgroundColor: Colors.blue,
+    backgroundColor: bgColor,
   );
   ScaffoldMessenger.of(context).showSnackBar(snackBar);
 }
