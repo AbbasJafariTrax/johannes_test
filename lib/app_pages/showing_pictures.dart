@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_email_sender/flutter_email_sender.dart';
 import 'package:johannes_test/app_pages/my_camera_preview.dart';
-import 'package:johannes_test/my_app_state.dart';
+import '../app_state_manager/my_app_state.dart';
 import 'package:johannes_test/my_utils/base.dart';
 import 'package:johannes_test/my_utils/const.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -57,9 +57,10 @@ class _ShowingPicturesState extends State<ShowingPictures> {
                   builder: (BuildContext context, value, Widget? child) {
                     return GridView.builder(
                       shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
                       padding: EdgeInsets.zero,
                       gridDelegate:
-                      const SliverGridDelegateWithFixedCrossAxisCount(
+                          const SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisSpacing: 2,
                         mainAxisSpacing: 2,
                         crossAxisCount: 3,
@@ -77,8 +78,6 @@ class _ShowingPicturesState extends State<ShowingPictures> {
                               child: Image.memory(
                                 snapshot.data ?? Uint8List(1),
                                 fit: BoxFit.cover,
-                                height: getDeviceSize(context).width * 0.3,
-                                width: getDeviceSize(context).width * 0.3,
                               ),
                               onTap: () async {
                                 var isGranted = await Permission.camera.isGranted;

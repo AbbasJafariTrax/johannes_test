@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:johannes_test/app_pages/showing_pictures.dart';
 import 'package:johannes_test/app_widgets/camera_button.dart';
 import 'package:johannes_test/main.dart';
-import 'package:johannes_test/my_app_state.dart';
+import '../app_state_manager/my_app_state.dart';
 import 'package:provider/provider.dart';
 
 import '../my_utils/base.dart';
@@ -52,15 +52,18 @@ class _MyCameraPreviewState extends State<MyCameraPreview> {
   }
 
   Future<void> _reinitCamera(CameraDescription description) async {
-    controller =
-        CameraController(description, ResolutionPreset.max);
+    controller = CameraController(description, ResolutionPreset.max);
     try {
       await controller.initialize();
       // to notify the widgets that camera has been initialized and now camera preview can be done
       setState(() {});
-    }
-    catch (e) {
-      print(e);
+    } catch (e) {
+      showSnackBar(
+        context: context,
+        msg: "Camera initialization failed!",
+        txtColor: Colors.white,
+        bgColor: Colors.red,
+      );
     }
   }
 
@@ -78,7 +81,12 @@ class _MyCameraPreviewState extends State<MyCameraPreview> {
             permissionDenied = true;
             break;
           default:
-            print('Handle other errors.');
+            showSnackBar(
+              context: context,
+              msg: "Please accept the permission!",
+              txtColor: Colors.white,
+              bgColor: Colors.red,
+            );
             break;
         }
       }
@@ -147,16 +155,21 @@ class _MyCameraPreviewState extends State<MyCameraPreview> {
                 width: getDeviceSize(context).width * 0.286,
                 decoration: const BoxDecoration(
                   image: DecorationImage(
-                    image:
-                    AssetImage("assets/images/black_lather.jpg"),
+                    image: AssetImage("assets/images/black_lather.jpg"),
                     fit: BoxFit.cover,
                   ),
                 ),
                 child: Column(
                   children: [
                     SizedBox(
-                        height: getDeviceSize(context).height * 0.12),
+                        height: getDeviceSize(context).height * 0.12,
+                    ),
                     CameraButton(
+                      btnTxt: "FLASH",
+                      imagePath: "assets/images/thunder.png",
+                      txtColor: MyColors.flashColor,
+                      imgHeight: getDeviceSize(context).height * 0.06,
+                      imgWidth: getDeviceSize(context).height * 0.06,
                       mFunc: () {
                         flashState = !flashState;
                         if (flashState) {
@@ -165,17 +178,16 @@ class _MyCameraPreviewState extends State<MyCameraPreview> {
                           controller.setFlashMode(FlashMode.off);
                         }
                       },
-                      btnTxt: "FLASH",
-                      imagePath: "assets/images/thunder.png",
-                      txtColor: MyColors.flashColor,
                     ),
                     SizedBox(
-                        height: getDeviceSize(context).height * 0.05),
+                      height: getDeviceSize(context).height * 0.05,
+                    ),
                     CameraButton(
                       btnTxt: "MIRROR",
                       imagePath: "assets/images/sync.png",
                       txtColor: MyColors.mirrorColor,
-
+                      imgHeight: getDeviceSize(context).height * 0.06,
+                      imgWidth: getDeviceSize(context).height * 0.06,
                       mFunc: () {
                         // get current lens direction (front / rear)
                         final lensDirection = controller.description
@@ -197,8 +209,6 @@ class _MyCameraPreviewState extends State<MyCameraPreview> {
 
                         if (newDescription != null) {
                           _reinitCamera(newDescription);
-                          // controller = CameraController(
-                          //     newDescription, ResolutionPreset.max);
                         }
                         else {
                           showSnackBar(
@@ -211,7 +221,8 @@ class _MyCameraPreviewState extends State<MyCameraPreview> {
                       },
                     ),
                     SizedBox(
-                        height: getDeviceSize(context).height * 0.08),
+                        height: getDeviceSize(context).height * 0.08,
+                    ),
                     InkWell(
                       child: Container(
                         width: getDeviceSize(context).height * 0.2,
@@ -249,7 +260,8 @@ class _MyCameraPreviewState extends State<MyCameraPreview> {
 
                           if (!added) {
                             Navigator.pushReplacementNamed(
-                                context, ShowingPictures.routeName);
+                                context, ShowingPictures.routeName,
+                            );
                           }
                         } else {
                           Provider.of<MyAppState>(

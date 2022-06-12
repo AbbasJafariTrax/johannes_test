@@ -8,10 +8,10 @@ void showSnackBar({
   required Color txtColor,
   required Color bgColor,
 }) {
-  const snackBar = SnackBar(
+  final snackBar = SnackBar(
     content: Text(
-      'Sending...',
-      style: TextStyle(color: Colors.black),
+      msg,
+      style: const TextStyle(color: Colors.black),
     ),
     backgroundColor: Colors.blue,
   );

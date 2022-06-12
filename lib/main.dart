@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:johannes_test/app_pages/my_camera_preview.dart';
 import 'package:johannes_test/app_pages/showing_pictures.dart';
-import 'package:johannes_test/my_app_state.dart';
+import 'app_state_manager/my_app_state.dart';
 import 'package:provider/provider.dart';
 
 late List<CameraDescription> cameras;

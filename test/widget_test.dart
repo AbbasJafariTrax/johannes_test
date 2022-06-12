@@ -1,30 +1,49 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility that Flutter provides. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
+import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_test/flutter_test.dart';
-
+import 'package:flutter/services.dart';
+import 'package:johannes_test/app_pages/my_camera_preview.dart';
+import 'package:johannes_test/app_pages/showing_pictures.dart';
 import 'package:johannes_test/main.dart';
+import '../lib/app_state_manager/my_app_state.dart';
+import 'package:provider/provider.dart';
 
-void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+  cameras = await availableCameras();
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
-  });
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider<MyAppState>(create: (_) => MyAppState())
+      ],
+      child: const CameraApp(),
+    ),
+  );
+}
+
+/// CameraApp is the Main Application.
+class CameraApp extends StatefulWidget {
+  /// Default Constructor
+  const CameraApp({Key? key}) : super(key: key);
+
+  @override
+  State<CameraApp> createState() => _CameraAppState();
+}
+
+class _CameraAppState extends State<CameraApp> {
+  @override
+  Widget build(BuildContext context) => MaterialApp(
+        debugShowCheckedModeBanner: false,
+        initialRoute: MyCameraPreview.routeName,
+        routes: {
+          MyCameraPreview.routeName: (context) => MyCameraPreview(),
+          ShowingPictures.routeName: (context) => ShowingPictures(),
+        },
+      );
 }

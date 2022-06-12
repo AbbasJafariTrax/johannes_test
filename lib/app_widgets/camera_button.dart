@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../my_utils/base.dart';
 import '../my_utils/const.dart';
 
@@ -7,6 +8,8 @@ class CameraButton extends StatelessWidget {
   final String btnTxt;
   final String imagePath;
   final Color txtColor;
+  final double imgHeight;
+  final double imgWidth;
 
   const CameraButton({
     Key? key,
@@ -14,6 +17,8 @@ class CameraButton extends StatelessWidget {
     required this.btnTxt,
     required this.imagePath,
     required this.txtColor,
+    required this.imgHeight,
+    required this.imgWidth,
   }) : super(key: key);
 
   @override
@@ -40,7 +45,7 @@ class CameraButton extends StatelessWidget {
             ),
             clickListener: mFunc,
           ),
-          Image.asset(imagePath, height: 30, width: 30)
+          Image.asset(imagePath, height: imgHeight, width: imgWidth)
         ],
       ),
     );
