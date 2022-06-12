@@ -5,11 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_email_sender/flutter_email_sender.dart';
 import 'package:johannes_test/app_pages/my_camera_preview.dart';
-import '../app_state_manager/my_app_state.dart';
 import 'package:johannes_test/my_utils/base.dart';
 import 'package:johannes_test/my_utils/const.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
+
+import '../app_state_manager/my_app_state.dart';
 
 class ShowingPictures extends StatefulWidget {
   static const routeName = "showing_pictures";

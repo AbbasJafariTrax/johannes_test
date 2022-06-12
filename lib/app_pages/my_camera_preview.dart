@@ -2,13 +2,12 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:johannes_test/app_pages/showing_pictures.dart';
+import 'package:johannes_test/app_state_manager/my_app_state.dart';
 import 'package:johannes_test/app_widgets/camera_button.dart';
 import 'package:johannes_test/main.dart';
-import '../app_state_manager/my_app_state.dart';
+import 'package:johannes_test/my_utils/base.dart';
+import 'package:johannes_test/my_utils/const.dart';
 import 'package:provider/provider.dart';
-
-import '../my_utils/base.dart';
-import '../my_utils/const.dart';
 
 class MyCameraPreview extends StatefulWidget {
   static const routeName = "/";
@@ -48,27 +47,11 @@ class _MyCameraPreviewState extends State<MyCameraPreview> {
     availableCameras().then((value) {
       _availableCameras = value;
     });
-    cameraInitial();
+    cameraInitial(cameras[0]);
   }
 
-  Future<void> _reinitCamera(CameraDescription description) async {
+  void cameraInitial(CameraDescription description) async {
     controller = CameraController(description, ResolutionPreset.max);
-    try {
-      await controller.initialize();
-      // to notify the widgets that camera has been initialized and now camera preview can be done
-      setState(() {});
-    } catch (e) {
-      showSnackBar(
-        context: context,
-        msg: "Camera initialization failed!",
-        txtColor: Colors.white,
-        bgColor: Colors.red,
-      );
-    }
-  }
-
-  void cameraInitial() async {
-    controller = CameraController(cameras[0], ResolutionPreset.max);
     controller.initialize().then((_) {
       if (!mounted) {
         return;
@@ -112,7 +95,7 @@ class _MyCameraPreviewState extends State<MyCameraPreview> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: (!controller.value.isInitialized || isLoading)
-          ? const CircularProgressIndicator()
+          ? const Center(child: CircularProgressIndicator())
           : permissionDenied
           ? const Center(
         child: Text(
@@ -208,7 +191,7 @@ class _MyCameraPreviewState extends State<MyCameraPreview> {
                         }
 
                         if (newDescription != null) {
-                          _reinitCamera(newDescription);
+                          cameraInitial(newDescription);
                         }
                         else {
                           showSnackBar(
@@ -278,13 +261,15 @@ class _MyCameraPreviewState extends State<MyCameraPreview> {
                       },
                     ),
                     SizedBox(
-                        height: getDeviceSize(context).height * 0.04),
+                        height: getDeviceSize(context).height * 0.04,
+                    ),
                     const Text(
                       "CAPTURE",
                       style: TextStyle(color: MyColors.mirrorColor),
                     ),
                     SizedBox(
-                        height: getDeviceSize(context).height * 0.1),
+                        height: getDeviceSize(context).height * 0.1,
+                    ),
                     Padding(
                       padding: EdgeInsets.only(
                         left: getDeviceSize(context).height * 0.12,
@@ -294,7 +279,6 @@ class _MyCameraPreviewState extends State<MyCameraPreview> {
                         btnHeight:
                         getDeviceSize(context).height * 0.08,
                         borderRadius: 5,
-                        clickListener: () {},
                         btnChild: const Text(
                           "<BACK",
                           style: TextStyle(
@@ -305,6 +289,13 @@ class _MyCameraPreviewState extends State<MyCameraPreview> {
                           shadowColor: Colors.transparent,
                           primary: Colors.transparent,
                         ),
+                        clickListener: () {
+
+                          Provider.of<MyAppState>(
+                            context,
+                            listen: false,
+                          ).removeLastImage();
+                        },
                       ),
                     ),
                   ],

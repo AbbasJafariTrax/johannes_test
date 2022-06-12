@@ -25,4 +25,9 @@ class MyAppState extends ChangeNotifier {
     _imageArrays[replaceIndex] = newImage;
     notifyListeners();
   }
+
+  void removeLastImage() {
+    _imageArrays.removeLast();
+    notifyListeners();
+  }
 }

@@ -5,6 +5,7 @@ Size getDeviceSize(BuildContext context) {
   return MediaQuery.of(context).size;
 }
 
+/// Application colors
 class MyColors {
   static const Color flashColor = Color(0xff65d244);
   static const Color mirrorColor = Color(0xff939695);
