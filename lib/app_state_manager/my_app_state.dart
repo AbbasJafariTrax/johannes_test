@@ -11,8 +11,8 @@ class MyAppState extends ChangeNotifier {
 
   /// After capturing 9 images then the user will go to showing image page
   bool addImage(XFile newImage) {
-    if (_imageArrays.length >= 2) {
-      if (_imageArrays.length < 3) _imageArrays.add(newImage);
+    if (_imageArrays.length >= 8) {
+      if (_imageArrays.length < 9) _imageArrays.add(newImage);
       notifyListeners();
       return false;
     }
@@ -26,8 +26,13 @@ class MyAppState extends ChangeNotifier {
     notifyListeners();
   }
 
-  void removeLastImage() {
-    _imageArrays.removeLast();
+  bool removeLastImage() {
+    if (_imageArrays.isNotEmpty) {
+      _imageArrays.removeLast();
+      notifyListeners();
+      return true;
+    }
     notifyListeners();
+    return false;
   }
 }

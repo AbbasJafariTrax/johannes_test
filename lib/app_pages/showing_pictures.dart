@@ -1,12 +1,16 @@
+import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_email_sender/flutter_email_sender.dart';
+import 'package:image/image.dart' as packageImage;
 import 'package:johannes_test/app_pages/my_camera_preview.dart';
 import 'package:johannes_test/my_utils/base.dart';
 import 'package:johannes_test/my_utils/const.dart';
+import 'package:path/path.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 
@@ -61,7 +65,7 @@ class _ShowingPicturesState extends State<ShowingPictures> {
                       physics: const NeverScrollableScrollPhysics(),
                       padding: EdgeInsets.zero,
                       gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
+                      const SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisSpacing: 2,
                         mainAxisSpacing: 2,
                         crossAxisCount: 3,
@@ -125,16 +129,78 @@ class _ShowingPicturesState extends State<ShowingPictures> {
                 borderRadius: 20,
                 clickListener: () async {
                   if (_formKey.currentState!.validate()) {
-                    /// Get the images list
-                    List<XFile> imageLists =
+                    List<XFile> imgList =
                         Provider.of<MyAppState>(context, listen: false)
                             .imageArrays;
+
+                    final image1 = packageImage
+                        .decodeImage(File(imgList[0].path).readAsBytesSync());
+
+                    var mergedImage;
+
+                    if (image1 != null) {
+                      mergedImage = packageImage.Image(
+                        image1.width + image1.width + image1.width,
+                        image1.height + image1.height + image1.height,
+                      );
+                      packageImage.copyInto(mergedImage, image1, blend: false);
+                    }
+
+                    for (int mIndex = 0; mIndex < imgList.length; mIndex++) {
+                      if (mIndex == 0) continue;
+
+                      final tempImg = packageImage.decodeImage(
+                          File(imgList[mIndex].path).readAsBytesSync());
+
+                      if (tempImg != null) {
+                        if (mIndex == 1 || mIndex == 4 || mIndex == 7) {
+                          packageImage.copyInto(
+                            mergedImage,
+                            tempImg,
+                            dstX: tempImg.width.toInt(),
+                            dstY: mIndex == 1
+                                ? 0
+                                : mIndex == 4
+                                    ? tempImg.height
+                                    : tempImg.height + tempImg.height,
+                            blend: false,
+                          );
+                        } else if (mIndex == 2 || mIndex == 5 || mIndex == 8) {
+                          packageImage.copyInto(
+                            mergedImage,
+                            tempImg,
+                            dstX: tempImg.width.toInt() + tempImg.width.toInt(),
+                            dstY: mIndex == 2
+                                ? 0
+                                : mIndex == 5
+                                    ? tempImg.height
+                                    : tempImg.height + tempImg.height,
+                            blend: false,
+                          );
+                        } else {
+                          packageImage.copyInto(
+                            mergedImage,
+                            tempImg,
+                            dstY: mIndex == 3
+                                ? tempImg.height
+                                : tempImg.height + tempImg.height,
+                            blend: false,
+                          );
+                        }
+                      }
+                    }
+
+                    final documentDirectory =
+                        await getApplicationDocumentsDirectory();
+                    final file =
+                        File(join(documentDirectory.path, "merged_image.jpg"));
+                    file.writeAsBytesSync(packageImage.encodeJpg(mergedImage));
 
                     final Email email = Email(
                       body: 'Email body',
                       subject: 'Email subject',
                       recipients: [_controller.text],
-                      attachmentPaths: imageLists.map((e) => e.path).toList(),
+                      attachmentPaths: [file.path],
                       isHTML: false,
                     );
 

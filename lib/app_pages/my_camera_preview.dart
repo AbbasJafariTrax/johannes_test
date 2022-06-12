@@ -51,7 +51,7 @@ class _MyCameraPreviewState extends State<MyCameraPreview> {
   }
 
   void cameraInitial(CameraDescription description) async {
-    controller = CameraController(description, ResolutionPreset.max);
+    controller = CameraController(description, ResolutionPreset.low);
     controller.initialize().then((_) {
       if (!mounted) {
         return;
@@ -104,207 +104,258 @@ class _MyCameraPreviewState extends State<MyCameraPreview> {
         ),
       )
           : SizedBox(
-        width: getDeviceSize(context).width,
-        child: CameraPreview(
-          controller,
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Stack(
-                alignment: Alignment.bottomCenter,
-                children: [
-                  SizedBox(
-                    height: getDeviceSize(context).height,
-                    width: getDeviceSize(context).width * 0.714,
-                    child: Image.asset(
-                      "assets/images/overlay.png",
-                      fit: BoxFit.fitWidth,
-                    ),
-                  ),
-                  const Positioned(
-                    bottom: 30,
-                    child: Text(
-                      "Front Retracted",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 22,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  )
-                ],
-              ),
-              Container(
-                width: getDeviceSize(context).width * 0.286,
-                decoration: const BoxDecoration(
-                  image: DecorationImage(
-                    image: AssetImage("assets/images/black_lather.jpg"),
-                    fit: BoxFit.cover,
-                  ),
-                ),
-                child: Column(
-                  children: [
-                    SizedBox(
-                        height: getDeviceSize(context).height * 0.12,
-                    ),
-                    CameraButton(
-                      btnTxt: "FLASH",
-                      imagePath: "assets/images/thunder.png",
-                      txtColor: MyColors.flashColor,
-                      imgHeight: getDeviceSize(context).height * 0.06,
-                      imgWidth: getDeviceSize(context).height * 0.06,
-                      mFunc: () {
-                        flashState = !flashState;
-                        if (flashState) {
-                          controller.setFlashMode(FlashMode.torch);
-                        } else {
-                          controller.setFlashMode(FlashMode.off);
-                        }
-                      },
-                    ),
-                    SizedBox(
-                      height: getDeviceSize(context).height * 0.05,
-                    ),
-                    CameraButton(
-                      btnTxt: "MIRROR",
-                      imagePath: "assets/images/sync.png",
-                      txtColor: MyColors.mirrorColor,
-                      imgHeight: getDeviceSize(context).height * 0.06,
-                      imgWidth: getDeviceSize(context).height * 0.06,
-                      mFunc: () {
-                        // get current lens direction (front / rear)
-                        final lensDirection = controller.description
-                            .lensDirection;
-                        CameraDescription newDescription;
-                        if (lensDirection ==
-                            CameraLensDirection.front) {
-                          newDescription = _availableCameras
-                              .firstWhere((description) =>
-                          description.lensDirection ==
-                              CameraLensDirection.back);
-                        }
-                        else {
-                          newDescription = _availableCameras
-                              .firstWhere((description) =>
-                          description.lensDirection ==
-                              CameraLensDirection.front);
-                        }
+                  width: getDeviceSize(context).width,
+                  child: ClipRect(
+                    child: OverflowBox(
+                      alignment: Alignment.center,
+                      child: FittedBox(
+                        fit: BoxFit.fitWidth,
+                        child: SizedBox(
+                          width: getDeviceSize(context).width,
+                          height: getDeviceSize(context).height,
+                          child: CameraPreview(
+                            controller,
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Stack(
+                                  alignment: Alignment.bottomCenter,
+                                  children: [
+                                    SizedBox(
+                                      height: getDeviceSize(context).height,
+                                      width:
+                                          getDeviceSize(context).width * 0.714,
+                                      child: Image.asset(
+                                        "assets/images/overlay.png",
+                                        fit: BoxFit.fitWidth,
+                                      ),
+                                    ),
+                                    const Positioned(
+                                      bottom: 30,
+                                      child: Text(
+                                        "Front Retracted",
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 22,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                                Container(
+                                  width: getDeviceSize(context).width * 0.286,
+                                  decoration: const BoxDecoration(
+                                    image: DecorationImage(
+                                      image: AssetImage(
+                                          "assets/images/black_lather.jpg"),
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                  child: Column(
+                                    children: [
+                                      SizedBox(
+                                        height: getDeviceSize(context).height *
+                                            0.12,
+                                      ),
+                                      CameraButton(
+                                        btnTxt: "FLASH",
+                                        imagePath: "assets/images/thunder.png",
+                                        txtColor: MyColors.flashColor,
+                                        imgHeight:
+                                            getDeviceSize(context).height *
+                                                0.06,
+                                        imgWidth:
+                                            getDeviceSize(context).height *
+                                                0.06,
+                                        mFunc: () {
+                                          flashState = !flashState;
+                                          if (flashState) {
+                                            controller
+                                                .setFlashMode(FlashMode.torch);
+                                          } else {
+                                            controller
+                                                .setFlashMode(FlashMode.off);
+                                          }
+                                        },
+                                      ),
+                                      SizedBox(
+                                        height: getDeviceSize(context).height *
+                                            0.05,
+                                      ),
+                                      CameraButton(
+                                        btnTxt: "MIRROR",
+                                        imagePath: "assets/images/sync.png",
+                                        txtColor: MyColors.mirrorColor,
+                                        imgHeight:
+                                            getDeviceSize(context).height *
+                                                0.06,
+                                        imgWidth:
+                                            getDeviceSize(context).height *
+                                                0.06,
+                                        mFunc: () {
+                                          // get current lens direction (front / rear)
+                                          final lensDirection = controller
+                                              .description.lensDirection;
+                                          CameraDescription newDescription;
+                                          if (lensDirection ==
+                                              CameraLensDirection.front) {
+                                            newDescription = _availableCameras
+                                                .firstWhere((description) =>
+                                                    description.lensDirection ==
+                                                    CameraLensDirection.back);
+                                          } else {
+                                            newDescription = _availableCameras
+                                                .firstWhere((description) =>
+                                                    description.lensDirection ==
+                                                    CameraLensDirection.front);
+                                          }
 
-                        if (newDescription != null) {
-                          cameraInitial(newDescription);
-                        }
-                        else {
-                          showSnackBar(
-                            context: context,
-                            msg: "Asked camera not available!",
-                            txtColor: Colors.white,
-                            bgColor: Colors.red,
-                          );
-                        }
-                      },
-                    ),
-                    SizedBox(
-                        height: getDeviceSize(context).height * 0.08,
-                    ),
-                    InkWell(
-                      child: Container(
-                        width: getDeviceSize(context).height * 0.2,
-                        height: getDeviceSize(context).height * 0.2,
-                        margin: EdgeInsets.only(
-                          right: getDeviceSize(context).width * 0.04,
-                        ),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(
-                              getDeviceSize(context).height * 0.1,
+                                          if (newDescription != null) {
+                                            cameraInitial(newDescription);
+                                          } else {
+                                            showSnackBar(
+                                              context: context,
+                                              msg:
+                                                  "Asked camera not available!",
+                                              txtColor: Colors.white,
+                                              bgColor: Colors.red,
+                                            );
+                                          }
+                                        },
+                                      ),
+                                      SizedBox(
+                                        height: getDeviceSize(context).height *
+                                            0.08,
+                                      ),
+                                      InkWell(
+                                        child: Container(
+                                          width: getDeviceSize(context).height *
+                                              0.2,
+                                          height:
+                                              getDeviceSize(context).height *
+                                                  0.2,
+                                          margin: EdgeInsets.only(
+                                            right:
+                                                getDeviceSize(context).width *
+                                                    0.04,
+                                          ),
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.all(
+                                              Radius.circular(
+                                                getDeviceSize(context).height *
+                                                    0.1,
+                                              ),
+                                            ),
+                                            border: Border.all(
+                                              color: MyColors.captureBtnBorder,
+                                              width: 3,
+                                            ),
+                                            gradient: const RadialGradient(
+                                              center: Alignment.center,
+                                              colors: [
+                                                MyColors.btnColorEnd,
+                                                MyColors.btnColorStart,
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                        onTap: () async {
+                                          XFile imageCaptured =
+                                              await controller.takePicture();
+                                          if (recaptureIndex == -1) {
+                                            bool added =
+                                                Provider.of<MyAppState>(context,
+                                                        listen: false)
+                                                    .addImage(imageCaptured);
+
+                                            if (!added) {
+                                              Navigator.pushReplacementNamed(
+                                                context,
+                                                ShowingPictures.routeName,
+                                              );
+                                            }
+                                          } else {
+                                            Provider.of<MyAppState>(
+                                              context,
+                                              listen: false,
+                                            ).recaptureImage(
+                                              imageCaptured,
+                                              recaptureIndex,
+                                            );
+
+                                            Navigator.pushReplacementNamed(
+                                                context,
+                                                ShowingPictures.routeName);
+                                          }
+                                        },
+                                      ),
+                                      SizedBox(
+                                        height: getDeviceSize(context).height *
+                                            0.04,
+                                      ),
+                                      const Text(
+                                        "CAPTURE",
+                                        style: TextStyle(
+                                            color: MyColors.mirrorColor),
+                                      ),
+                                      SizedBox(
+                                        height:
+                                            getDeviceSize(context).height * 0.1,
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsets.only(
+                                          left: getDeviceSize(context).height *
+                                              0.12,
+                                        ),
+                                        child: MyElevatedButton(
+                                          btnWidth:
+                                              getDeviceSize(context).width *
+                                                  0.08,
+                                          btnHeight:
+                                              getDeviceSize(context).height *
+                                                  0.08,
+                                          borderRadius: 5,
+                                          btnChild: const Text(
+                                            "<BACK",
+                                            style: TextStyle(
+                                                color: Colors.red,
+                                                fontSize: 13),
+                                          ),
+                                          btnStyle: ElevatedButton.styleFrom(
+                                            padding: EdgeInsets.zero,
+                                            shadowColor: Colors.transparent,
+                                            primary: Colors.transparent,
+                                          ),
+                                          clickListener: () {
+                                            bool deleted =
+                                                Provider.of<MyAppState>(
+                                              context,
+                                              listen: false,
+                                            ).removeLastImage();
+
+                                            if (deleted) {
+                                              showSnackBar(
+                                                context: context,
+                                                msg: "Previous image deleted!",
+                                                txtColor: Colors.white,
+                                                bgColor: Colors.red,
+                                              );
+                                            }
+                                          },
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
-                          border: Border.all(
-                            color: MyColors.captureBtnBorder,
-                            width: 3,
-                          ),
-                          gradient: const RadialGradient(
-                            center: Alignment.center,
-                            colors: [
-                              MyColors.btnColorEnd,
-                              MyColors.btnColorStart,
-                            ],
-                          ),
                         ),
                       ),
-                      onTap: () async {
-                        XFile imageCaptured =
-                        await controller.takePicture();
-                        if (recaptureIndex == -1) {
-                          bool added = Provider.of<MyAppState>(
-                              context,
-                              listen: false)
-                              .addImage(imageCaptured);
-
-                          if (!added) {
-                            Navigator.pushReplacementNamed(
-                                context, ShowingPictures.routeName,
-                            );
-                          }
-                        } else {
-                          Provider.of<MyAppState>(
-                            context,
-                            listen: false,
-                          ).recaptureImage(
-                            imageCaptured,
-                            recaptureIndex,
-                          );
-
-                          Navigator.pushReplacementNamed(
-                              context, ShowingPictures.routeName);
-                        }
-                      },
                     ),
-                    SizedBox(
-                        height: getDeviceSize(context).height * 0.04,
-                    ),
-                    const Text(
-                      "CAPTURE",
-                      style: TextStyle(color: MyColors.mirrorColor),
-                    ),
-                    SizedBox(
-                        height: getDeviceSize(context).height * 0.1,
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(
-                        left: getDeviceSize(context).height * 0.12,
-                      ),
-                      child: MyElevatedButton(
-                        btnWidth: getDeviceSize(context).width * 0.08,
-                        btnHeight:
-                        getDeviceSize(context).height * 0.08,
-                        borderRadius: 5,
-                        btnChild: const Text(
-                          "<BACK",
-                          style: TextStyle(
-                              color: Colors.red, fontSize: 13),
-                        ),
-                        btnStyle: ElevatedButton.styleFrom(
-                          padding: EdgeInsets.zero,
-                          shadowColor: Colors.transparent,
-                          primary: Colors.transparent,
-                        ),
-                        clickListener: () {
-
-                          Provider.of<MyAppState>(
-                            context,
-                            listen: false,
-                          ).removeLastImage();
-                        },
-                      ),
-                    ),
-                  ],
+                  ),
                 ),
-              ),
-            ],
-          ),
-        ),
-      ),
     );
   }
 }
