@@ -14,9 +14,11 @@ class MyAppState extends ChangeNotifier {
     if (_imageArrays.length >= 2) {
       if (_imageArrays.length < 3) _imageArrays.add(newImage);
       notifyListeners();
+      print("Mahdi: addImage: inside: ${_imageArrays.length}");
       return false;
     }
     _imageArrays.add(newImage);
+    print("Mahdi: addImage: outside: ${_imageArrays.length}");
     return true;
   }
 
@@ -26,3 +28,5 @@ class MyAppState extends ChangeNotifier {
     notifyListeners();
   }
 }
+// testmailjohan366@gmail.com
+// 123!@#asd

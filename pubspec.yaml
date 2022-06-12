@@ -35,9 +35,9 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
   camera: ^0.9.7+1
-  video_player: ^2.4.4
   permission_handler: ^9.2.0
   provider: ^6.0.3
+  flutter_email_sender: ^5.1.0
 
 dev_dependencies:
   flutter_test:

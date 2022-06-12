@@ -2,6 +2,22 @@ import 'package:flutter/material.dart';
 
 import 'const.dart';
 
+void showSnackBar({
+  required BuildContext context,
+  required String msg,
+  required Color txtColor,
+  required Color bgColor,
+}) {
+  const snackBar = SnackBar(
+    content: Text(
+      'Sending...',
+      style: TextStyle(color: Colors.black),
+    ),
+    backgroundColor: Colors.blue,
+  );
+  ScaffoldMessenger.of(context).showSnackBar(snackBar);
+}
+
 class MyElevatedButton extends StatelessWidget {
   final VoidCallback clickListener;
   final Widget btnChild;

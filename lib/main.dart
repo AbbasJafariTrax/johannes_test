@@ -2,12 +2,10 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:johannes_test/app_pages/my_camera_preview.dart';
+import 'package:johannes_test/app_pages/showing_pictures.dart';
 import 'package:johannes_test/my_app_state.dart';
-import 'package:johannes_test/test.dart';
 import 'package:provider/provider.dart';
 
-/// [cameras] is used to check availability of device's camera and we pass it
-/// to camera controller.
 late List<CameraDescription> cameras;
 
 Future<void> main() async {
