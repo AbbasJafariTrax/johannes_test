@@ -35,4 +35,3 @@ and then you can send it with your image to any other email you want.
 * [Image](https://pub.dev/packages/image "image")
 * [Path_Provider](https://pub.dev/packages/path_provider "path_provider")
 * [Path](https://pub.dev/packages/path "path")
-* [Flutter_Native_Image](https://pub.dev/packages/flutter_native_image "flutter_native_image")

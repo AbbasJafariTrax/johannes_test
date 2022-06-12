@@ -20,6 +20,9 @@ class _MyCameraPreviewState extends State<MyCameraPreview> {
   late CameraController controller;
   bool permissionDenied = false;
   bool isLoading = true;
+
+  /// with [recaptureIndex] we can check whether the user comes from showing_pictures pages or not
+  /// if true we pass the image id the replace it with a new id
   int recaptureIndex = -1;
   bool flashState = false;
   late List<CameraDescription> _availableCameras;
@@ -291,25 +294,35 @@ class _MyCameraPreviewState extends State<MyCameraPreview> {
                                   primary: Colors.transparent,
                                 ),
                                 clickListener: () {
-                                  bool deleted = Provider.of<MyAppState>(
-                                    context,
-                                    listen: false,
-                                  ).removeLastImage();
-
-                                  if (deleted) {
+                                  if (recaptureIndex != -1) {
                                     showSnackBar(
                                       context: context,
-                                      msg: "Previous image deleted!",
+                                      msg: "You can't delete the image!",
                                       txtColor: Colors.white,
                                       bgColor: Colors.red,
                                     );
+                                    return;
                                   } else {
-                                    showSnackBar(
-                                      context: context,
-                                      msg: "Images list is empty!",
-                                      txtColor: Colors.white,
-                                      bgColor: Colors.blue,
-                                    );
+                                    bool deleted = Provider.of<MyAppState>(
+                                      context,
+                                      listen: false,
+                                    ).removeLastImage();
+
+                                    if (deleted) {
+                                      showSnackBar(
+                                        context: context,
+                                        msg: "Previous image deleted!",
+                                        txtColor: Colors.white,
+                                        bgColor: Colors.red,
+                                      );
+                                    } else {
+                                      showSnackBar(
+                                        context: context,
+                                        msg: "Images list is empty!",
+                                        txtColor: Colors.white,
+                                        bgColor: Colors.blue,
+                                      );
+                                    }
                                   }
                                 },
                               ),
